@@ -10,6 +10,7 @@ function Dashboard() {
   useAuth();
   const [users, setUsers] = useState([]);
   const { token, role } = useContext(UserContext);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     axios
@@ -24,7 +25,25 @@ function Dashboard() {
       .catch((error) => {
         console.error("Error fetching tasks:", error);
       });
-  }, [token]);
+  }, [token, refresh]);
+
+  const deleteUser = (id) => {
+    axios
+      .delete(`http://localhost:8080/api/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error deleting user:", error);
+      })
+      .finally(() => {
+        setRefresh(true);
+      });
+  };
 
   return (
     <div className="flex flex-col h-screen w-full bg-black text-white">
@@ -43,6 +62,12 @@ function Dashboard() {
               } text-white rounded-md p-2 font-semibold`}
             >
               {user.role_name}
+            </p>
+            <p
+              className="p-2 bg-red-500 text-white font-bold cursor-pointer hover:bg-red-600/80 rounded-md"
+              onClick={() => deleteUser(user.id)}
+            >
+              delete
             </p>
           </div>
         ))}
