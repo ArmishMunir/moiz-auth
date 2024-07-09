@@ -9,7 +9,7 @@ function Login() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { updateToken, setRole } = useContext(UserContext);
+  const { updateToken, setRole, setUserData } = useContext(UserContext);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -28,10 +28,15 @@ function Login() {
       const { token } = response.data;
       localStorage.setItem("token", token);
       updateToken(token);
-      setRole(response.data.role)
+      setRole(response.data.role);
+      setUserData({
+        id: response.data.id,
+        name: response.data.name,
+        status: response.data.status,
+      });
 
       if (response.status === 200) {
-        navigate("/dashboard");
+        navigate("/profile");
       }
     } catch (err) {
       console.log(err);

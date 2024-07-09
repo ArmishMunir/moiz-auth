@@ -36,7 +36,13 @@ const loginUser = async (req, res) => {
     }
 
     const token = generateToken(user);
-    res.status(200).json({ token, role: user.role_name });
+    res.status(200).json({
+      token,
+      role: user.role_name,
+      name: user.name,
+      id: user.id,
+      status: user.status,
+    });
   } catch (error) {
     console.error("Error logging in:", error);
     res.status(500).send("Error logging in");
@@ -75,4 +81,21 @@ const deleteUser = (req, res) => {
   });
 };
 
-module.exports = { createUser, loginUser, getUsers, deleteUser };
+const updateUser = (req, res) => {
+  const userId = req.params.id;
+  const status = req.body.status;
+
+  const query = "UPDATE user SET status = ? WHERE id = ?";
+  connection.query(query, [status, userId], (error, results) => {
+    if (error) {
+      console.error("Error updating user in database:", error);
+      return res.status(500).send("Error updating user in database");
+    }
+    if (results.affectedRows === 0) {
+      return res.status(404).send("User not found");
+    }
+    res.status(200).send("User updated successfully");
+  });
+};
+
+module.exports = { createUser, loginUser, getUsers, deleteUser, updateUser };

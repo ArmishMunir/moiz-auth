@@ -21,6 +21,15 @@ function Navbar({ role }) {
         >
           Add User
         </button>
+        <button
+          className={`${
+            role === ROLES.USER && "opacity-50"
+          } p-2 bg-slate-300 rounded-md shadow-sm font-bold text-black`}
+          type="button"
+          onClick={() => navigate("/dashboard")}
+        >
+          Dashboard
+        </button>
 
         <button
           className={`p-2 bg-blue-500 text-white rounded-md shadow-sm font-bold`}
@@ -45,6 +54,7 @@ export const AddUserModal = ({ setShowModal }) => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user");
+  const [status, setStatus] = useState("active");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,6 +63,7 @@ export const AddUserModal = ({ setShowModal }) => {
         name,
         password,
         role,
+        status,
       });
 
       if (response.status === 201) {
@@ -112,6 +123,24 @@ export const AddUserModal = ({ setShowModal }) => {
               </option>
               <option value={ROLES.SUPER_ADMIN} className="text-black">
                 {ROLES.SUPER_ADMIN}
+              </option>
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
+              Status
+            </label>
+            <select
+              value={role}
+              onChange={(e) => setStatus(e.target.value)}
+              className="text-black mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              required
+            >
+              <option value="active" className="text-black">
+                active
+              </option>
+              <option value="inactive" className="text-black">
+                inactive
               </option>
             </select>
           </div>

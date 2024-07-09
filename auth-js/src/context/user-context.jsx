@@ -5,6 +5,11 @@ const UserContext = createContext(undefined);
 const UserProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [role, setRole] = useState(null);
+  const [userData, setUserData] = useState({
+    id: "",
+    name: "",
+    status: "",
+  });
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -23,7 +28,9 @@ const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ token, updateToken, role, setRole }}>
+    <UserContext.Provider
+      value={{ token, updateToken, role, setRole, userData, setUserData }}
+    >
       {children}
     </UserContext.Provider>
   );

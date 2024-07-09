@@ -27,6 +27,7 @@ const createUserTable = async () => {
           name VARCHAR(255) NOT NULL,
           password VARCHAR(255) NOT NULL,
           role_id INT,
+          status ENUM('active', 'inactive') DEFAULT 'active',
           FOREIGN KEY (role_id) REFERENCES role(id)
         )`,
         (error, results, fields) => {
@@ -86,7 +87,7 @@ const createUser = async (name, password, role) => {
 const findUserByName = (name) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      `SELECT user.id, user.name, user.password, role.role_name 
+      `SELECT user.id, user.name, user.password, role.role_name, user.status 
        FROM user 
        LEFT JOIN role ON user.role_id = role.id 
        WHERE user.name = ?`,

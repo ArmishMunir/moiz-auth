@@ -45,6 +45,28 @@ function Dashboard() {
       });
   };
 
+  const updateUser = (id, status) => {
+    axios
+      .put(
+        `http://localhost:8080/api/users/${id}`,
+        { status: status },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error updating user:", error);
+      })
+      .finally(() => {
+        setRefresh(true);
+      });
+  };
+
   return (
     <div className="flex flex-col h-screen w-full bg-black text-white">
       <Navbar role={role} />
@@ -68,6 +90,17 @@ function Dashboard() {
               onClick={() => deleteUser(user.id)}
             >
               delete
+            </p>
+            <p
+              className="p-2 bg-green-400/50 text-bold text-white cursor-pointer hover:bg-green-600/80 rounded-md"
+              onClick={() =>
+                updateUser(
+                  user.id,
+                  user.status === "active" ? "inactive" : "active"
+                )
+              }
+            >
+              Update
             </p>
           </div>
         ))}
